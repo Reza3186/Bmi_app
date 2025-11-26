@@ -3,39 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحلیل پیشرفته BMI و ترکیب بدنی</title>
+    <title>تحلیل پیشرفته BMI (گرافیکی)</title>
     <style>
-        body { font-family: Tahoma, sans-serif; background-color: #f0f2f5; padding: 15px; display: flex; justify-content: center; }
-        .container { background-color: white; padding: 25px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); width: 100%; max-width: 380px; text-align: center; }
-        h2 { color: #333; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; }
-        .input-group { text-align: right; margin-bottom: 15px; }
-        label { display: block; font-size: 14px; color: #555; margin-bottom: 5px; }
+        /* تنظیمات اصلی و فونت */
+        body { 
+            font-family: Tahoma, sans-serif; 
+            background-color: #f0f2f5; /* پس‌زمینه روشن */
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; /* برای قرارگیری امضا در پایین */
+            align-items: center; 
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* کانتینر اصلی با استایل مدرن */
+        .container { 
+            background-color: white; 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.08), -8px -8px 15px rgba(255, 255, 255, 0.8); /* سایه‌های نرم */
+            width: 100%; 
+            max-width: 380px; 
+            text-align: center; 
+            margin-bottom: 20px;
+        }
+
+        h2 { 
+            color: #ff6600; /* رنگ اصلی ایتا */
+            margin-bottom: 25px; 
+            padding-bottom: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* گروه ورودی‌ها */
+        .input-group { 
+            text-align: right; 
+            margin-bottom: 15px; 
+            position: relative;
+        }
+        
+        label { 
+            display: block; 
+            font-size: 13px; 
+            color: #555; 
+            margin-bottom: 5px; 
+            font-weight: 600;
+        }
+
+        /* استایل ورودی‌ها */
         input, select {
-            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; 
-            font-size: 16px; text-align: center; background-color: #fff;
+            width: 100%; 
+            padding: 12px 10px 12px 40px; /* فضای بیشتر برای آیکون */
+            border: 1px solid #e0e0e0; 
+            border-radius: 10px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            background-color: #f9f9f9;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.05); /* سایه داخلی برای عمق */
+            transition: all 0.3s;
         }
+        input:focus, select:focus {
+            border-color: #ff6600;
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(255, 102, 0, 0.3);
+            background-color: white;
+            outline: none;
+        }
+        
+        /* آیکون‌های ورودی */
+        .input-icon {
+            position: absolute;
+            left: 10px;
+            top: 35px;
+            font-size: 18px;
+            color: #ff6600;
+        }
+
+        /* دکمه زیبا */
         button {
-            width: 100%; padding: 14px; background-color: #ff6600; color: white; border: none; border-radius: 8px; 
-            font-size: 17px; cursor: pointer; margin-top: 15px; transition: background-color 0.3s;
+            width: 100%; 
+            padding: 14px; 
+            background-color: #ff6600; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 17px; 
+            cursor: pointer; 
+            margin-top: 20px;
+            box-shadow: 4px 4px 10px rgba(255, 102, 0, 0.4); /* سایه قوی‌تر */
+            transition: all 0.3s;
+            font-weight: bold;
         }
-        button:active { background-color: #e65c00; }
-        #result { margin-top: 30px; text-align: right; padding: 15px; border-radius: 10px; line-height: 1.6; }
-        .bmi-value { font-size: 30px; margin-bottom: 5px; font-weight: bold; }
-        .status-message { font-size: 16px; font-weight: bold; margin-bottom: 15px; }
-        .section-title { font-size: 15px; font-weight: bold; color: #ff6600; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 5px;}
-        .estimation-list { list-style-type: none; padding: 0; margin-top: 10px; }
-        .estimation-list li { margin-bottom: 5px; font-size: 14px; display: flex; justify-content: space-between; }
-        .disclaimer { font-size: 12px; color: #888; margin-top: 20px; text-align: justify; }
+        button:active { 
+            background-color: #e65c00; 
+            box-shadow: 1px 1px 5px rgba(255, 102, 0, 0.5);
+            transform: translateY(2px);
+        }
+
+        /* بخش نمایش نتایج */
+        #result { 
+            margin-top: 30px; 
+            text-align: right; 
+            padding: 20px; 
+            border-radius: 15px; 
+            line-height: 1.6;
+            background-color: #f7f7f7;
+            border: 2px solid; /* رنگ این Border در JS تعیین می‌شود */
+        }
+        .bmi-value { 
+            font-size: 32px; 
+            margin-bottom: 5px; 
+            font-weight: 900;
+            text-align: center;
+        }
+        .status-message { 
+            font-size: 17px; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .section-title { 
+            font-size: 14px; 
+            font-weight: bold; 
+            color: #333; 
+            margin-top: 15px; 
+            border-bottom: 1px dashed #ddd; 
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .estimation-list { 
+            list-style-type: none; 
+            padding: 0; 
+            margin-top: 10px; 
+        }
+        .estimation-list li { 
+            margin-bottom: 8px; 
+            font-size: 13px; 
+            display: flex; 
+            justify-content: space-between; 
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .disclaimer { 
+            font-size: 11px; 
+            color: #888; 
+            margin-top: 20px; 
+            text-align: justify; 
+            padding-top: 10px; 
+            border-top: 1px dashed #ccc; 
+        }
+
+        /* امضای پایین صفحه */
+        .signature {
+            font-size: 11px;
+            color: #999;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            padding-bottom: 5px;
+        }
+        .signature a {
+            color: #ff6600;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>تحلیل پیشرفته BMI</h2>
+    <h2>🔬 تحلیل هوشمند ترکیب بدنی</h2>
     
     <div class="input-group">
         <label for="age">سن:</label>
         <input type="number" id="age" placeholder="مثلاً: 30" min="1" max="120">
+        <span class="input-icon">🎂</span>
     </div>
 
     <div class="input-group">
@@ -45,22 +193,30 @@
             <option value="1">آقا</option>
             <option value="0">خانم</option>
         </select>
+        <span class="input-icon">👤</span>
     </div>
     
     <div class="input-group">
         <label for="weight">وزن (کیلوگرم):</label>
         <input type="number" id="weight" placeholder="مثلاً: 75" min="1">
+        <span class="input-icon">⚖️</span>
     </div>
     
     <div class="input-group">
         <label for="height">قد (سانتی‌متر):</label>
         <input type="number" id="height" placeholder="مثلاً: 170" min="1">
+        <span class="input-icon">📏</span>
     </div>
     
-    <button onclick="calculateHealthMetrics()">🔬 تحلیل جامع</button>
+    <button onclick="calculateHealthMetrics()">🔥 شروع تحلیل جامع</button>
     
     <div id="result"></div>
 </div>
+
+<div class="signature">
+    تولید شده توسط <a href="#">Reza Jahanshahi</a>
+</div>
+
 
 <script>
     // 1. تابع اصلی محاسبه BMI
@@ -69,102 +225,133 @@
         return (weight / (heightInMeters * heightInMeters)).toFixed(1);
     }
 
-    // 2. تابع تخمین درصد چربی بدن (با استفاده از فرمول Deurenberg - بر اساس BMI، سن و جنسیت)
+    // 2. تابع تخمین درصد چربی بدن (فرمول Deurenberg)
     function getBodyFatPercentage(bmi, age, gender) {
-        // Gender: 1=Male, 0=Female
-        // فرمول: BFP = (1.20 * BMI) + (0.23 * Age) - (10.8 * Gender) - 5.4 
-        // در این فرمول، 10.8 برای مردان (1) کم می‌شود و برای زنان (0) کم نمی‌شود.
+        // Gender: 1=Male (آقا), 0=Female (خانم)
+        // BFP = (1.20 * BMI) + (0.23 * Age) - (10.8 * Gender) - 5.4 
         let bfp = (1.20 * parseFloat(bmi)) + (0.23 * age) - (10.8 * gender) - 5.4;
-        return Math.max(0, bfp.toFixed(1)); // مطمئن می‌شویم عدد منفی نشود
+        return Math.max(0, bfp.toFixed(1));
     }
 
-    // 3. تابع تحلیل وضعیت BMI بر اساس سن
-    function analyzeBMIStatus(bmi, age) {
-        let status = { message: "", color: "" };
+    // 3. تحلیل BMI برای بزرگسالان (بالای 20 سال)
+    function analyzeAdultBMIStatus(bmi, age) {
+        let status = { message: "", color: "", source: "" };
 
-        if (age < 20) {
-            status.color = "#007bff";
-            status.message = "سن شما زیر 20 سال است. تحلیل BMI بزرگسالان برای شما معتبر نیست. لطفاً با نمودارهای رشد و پزشک متخصص مشورت کنید.";
-            return status;
-        }
-
-        // تنظیمات برای بزرگسالان 20 تا 65 سال
         if (bmi < 18.5) {
             status.message = "کمبود وزن";
-            status.color = "#ffc107";
+            status.color = "#ffc107"; 
         } else if (bmi >= 18.5 && bmi < 25) {
-            status.message = "وزن نرمال (سالم)";
-            status.color = "#28a745";
+            status.message = "وزن نرمال و سالم";
+            status.color = "#28a745"; 
         } else if (bmi >= 25 && bmi < 30) {
             status.message = "اضافه وزن";
-            status.color = "#fd7e14";
+            status.color = "#fd7e14"; 
         } else {
-            status.message = "چاقی";
-            status.color = "#dc3545";
+            status.message = "چاقی (نیاز به توجه پزشکی)";
+            status.color = "#dc3545"; 
         }
 
-        // تنظیمات خاص برای افراد مسن (بالای 65 سال)
         if (age >= 65 && bmi >= 25 && bmi < 27) {
-            status.message = "وزن خوب (برای سالمندان)";
-            status.color = "#4CAF50"; // کمی سبزتر
+            status.message = "وزن مناسب (برای سالمندان)";
+            status.color = "#388E3C"; 
         }
         
+        status.source = "سازمان بهداشت جهانی (WHO)";
         return status;
     }
 
-    // 4. تابع اصلی و جامع
+    // 4. تحلیل BMI برای کودکان و نوجوانان (زیر 20 سال) - بر اساس درصدها
+    function analyzeChildBMIStatus(bmi, age) {
+        let status = { message: "", color: "", source: "" };
+
+        if (age < 2) {
+            status.message = "زیر ۲ سال: تحلیل BMI برای این سن، فقط باید توسط پزشک با نمودارهای تخصصی انجام شود.";
+            status.color = "#007bff";
+            status.source = "هشدار تخصصی";
+            return status;
+        }
+
+        // منطق Percentile (تقریبی) - BMI-for-Age
+        // مقادیر زیر برای نمایش منطق کدنویسی هستند و باید به عنوان تقریب در نظر گرفته شوند
+        if (bmi < 16) { 
+             status.message = "کمبود وزن (زیر 5 درصد)";
+             status.color = "#ffc107";
+        } else if (bmi >= 16 && bmi < 22) { 
+             status.message = "وزن سالم (بین 5 تا 85 درصد)";
+             status.color = "#28a745";
+        } else if (bmi >= 22 && bmi < 25) { 
+             status.message = "اضافه وزن (بین 85 تا 95 درصد)";
+             status.color = "#fd7e14";
+        } else { 
+             status.message = "چاقی (بالای 95 درصد)";
+             status.color = "#dc3545";
+        }
+
+        status.source = "نمودارهای رشد CDC/WHO (تقریب)";
+        return status;
+    }
+
+    // 5. تابع اصلی و جامع
     function calculateHealthMetrics() {
-        // گرفتن ورودی‌ها
         const weight = parseFloat(document.getElementById('weight').value);
         const height = parseFloat(document.getElementById('height').value);
         const age = parseInt(document.getElementById('age').value);
-        const gender = document.getElementById('gender').value; // 1 یا 0
+        const gender = document.getElementById('gender').value; 
         const resultDiv = document.getElementById('result');
 
         // اعتبارسنجی
         if (!weight || !height || !age || gender === "") {
             resultDiv.style.backgroundColor = '#ffe0e0';
-            resultDiv.innerHTML = '<p style="color: #dc3545; font-weight: bold;">⚠️ لطفاً تمام کادرهای سن، جنسیت، وزن و قد را پر کنید.</p>';
+            resultDiv.style.borderColor = '#dc3545';
+            resultDiv.innerHTML = '<p style="color: #dc3545; font-weight: bold; text-align: center;">⚠️ لطفاً تمام کادرهای سن، جنسیت، وزن و قد را پر کنید.</p>';
             return;
         }
         
-        // --- محاسبات ---
+        // محاسبات
         const bmi = calculateBMI(weight, height);
-        const bmiAnalysis = analyzeBMIStatus(bmi, age);
-        const bfp = getBodyFatPercentage(bmi, age, parseInt(gender));
+        const genderInt = parseInt(gender);
+
+        let analysis;
+        if (age >= 20) {
+            analysis = analyzeAdultBMIStatus(bmi, age);
+        } else {
+            analysis = analyzeChildBMIStatus(bmi, age);
+        }
+
+        const bfp = getBodyFatPercentage(bmi, age, genderInt);
         
-        // تخمین توده بدون چربی (LBM = Lean Body Mass)
+        // تخمین توده بدون چربی (LBM)
         const fatMass = (bfp / 100) * weight;
         const leanBodyMass = weight - fatMass;
         
-        // --- خروجی ---
+        // خروجی HTML
         let outputHTML = `
-            <p class="bmi-value" style="color: ${bmiAnalysis.color};">${bmi}</p>
-            <p class="status-message" style="color: ${bmiAnalysis.color};">وضعیت کلی: ${bmiAnalysis.message}</p>
+            <p class="bmi-value" style="color: ${analysis.color};">${bmi}</p>
+            <p class="status-message" style="color: ${analysis.color};">وضعیت کلی: ${analysis.message}</p>
+            <p style="font-size:12px; color:#999; text-align:center;">مرجع تحلیل: ${analysis.source}</p>
         `;
 
-        // اگر تحلیل BMI درست نبود، فقط هشدار را نمایش بده
-        if (age < 20) {
-            outputHTML += `<p style="font-size:14px; color:#007bff; text-align:justify;">${bmiAnalysis.message}</p>`;
-        } else {
-             // اگر برای بزرگسالان بود، تحلیل چربی و توده را اضافه کن
+        // نمایش تخمین ترکیب بدنی (اگر سن زیر 2 سال نیست)
+        if (age >= 2) {
             outputHTML += `
-                <p class="section-title">📊 تحلیل ترکیب بدنی (تخمین)</p>
+                <p class="section-title">✨ ترکیب بدنی (تخمین وزن)</p>
                 <ul class="estimation-list">
-                    <li>درصد چربی بدن (BFP): <span>${bfp}%</span></li>
-                    <li>توده چربی بدن: <span>${fatMass.toFixed(1)} کیلوگرم</span></li>
-                    <li>توده بدون چربی (شامل عضله/استخوان): <span>${leanBodyMass.toFixed(1)} کیلوگرم</span></li>
+                    <li>توده چربی بدن: <span>${fatMass.toFixed(1)} کیلوگرم (${bfp}%)</span></li>
+                    <li>توده بدون چربی (عضله، آب، استخوان): <span>${leanBodyMass.toFixed(1)} کیلوگرم</span></li>
                 </ul>
             `;
         }
 
+
         outputHTML += `
             <p class="disclaimer">
-            **توضیح فنی:** درصد چربی با فرمول‌های تخمینی (مانند Deurenberg) محاسبه شده و یک "تخمین" علمی است، نه اندازه‌گیری دقیق. برای محاسبه دقیق توده استخوان و ماهیچه، نیاز به اسکن تخصصی است.
+            **هشدار تخصصی:** این یک تخمین علمی است. برای تشخیص دقیق سلامتی و دریافت برنامه غذایی، با متخصص مشورت کنید.
             </p>
         `;
 
-        resultDiv.style.backgroundColor = bmiAnalysis.color + "20";
+        // استایل کارت نتیجه
+        resultDiv.style.backgroundColor = analysis.color + "15";
+        resultDiv.style.borderColor = analysis.color;
         resultDiv.innerHTML = outputHTML;
     }
 </script>
