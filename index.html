@@ -3,98 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاسبه‌گر BMI هوشمند</title>
+    <title>تحلیل پیشرفته BMI و ترکیب بدنی</title>
     <style>
-        /* تنظیمات کلی صفحه */
-        body {
-            font-family: Tahoma, sans-serif;
-            background-color: #f0f2f5;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
+        body { font-family: Tahoma, sans-serif; background-color: #f0f2f5; padding: 15px; display: flex; justify-content: center; }
+        .container { background-color: white; padding: 25px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); width: 100%; max-width: 380px; text-align: center; }
+        h2 { color: #333; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; }
+        .input-group { text-align: right; margin-bottom: 15px; }
+        label { display: block; font-size: 14px; color: #555; margin-bottom: 5px; }
+        input, select {
+            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; 
+            font-size: 16px; text-align: center; background-color: #fff;
         }
-        /* کانتینر اصلی */
-        .container {
-            background-color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 350px; /* اندازه مناسب برای گوشی */
-            text-align: center;
-        }
-        h2 { 
-            color: #333; 
-            margin-bottom: 25px;
-            border-bottom: 2px solid #ff6600; /* خط نارنجی زیر عنوان */
-            padding-bottom: 10px;
-        }
-        /* ظاهر ورودی‌ها */
-        .input-group {
-            text-align: right;
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-            text-align: center;
-        }
-        /* ظاهر دکمه */
         button {
-            width: 100%;
-            padding: 14px;
-            background-color: #ff6600;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 17px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: background-color 0.3s;
+            width: 100%; padding: 14px; background-color: #ff6600; color: white; border: none; border-radius: 8px; 
+            font-size: 17px; cursor: pointer; margin-top: 15px; transition: background-color 0.3s;
         }
         button:active { background-color: #e65c00; }
-
-        /* بخش نمایش نتایج */
-        #result {
-            margin-top: 30px;
-            text-align: right; /* متن توضیحات راست چین باشد */
-            padding: 15px;
-            border-radius: 10px;
-            line-height: 1.6;
-        }
-        .bmi-value {
-            font-size: 36px;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .status-message {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .explanation-text {
-            font-size: 14px;
-            text-align: justify;
-            color: #444;
-        }
+        #result { margin-top: 30px; text-align: right; padding: 15px; border-radius: 10px; line-height: 1.6; }
+        .bmi-value { font-size: 30px; margin-bottom: 5px; font-weight: bold; }
+        .status-message { font-size: 16px; font-weight: bold; margin-bottom: 15px; }
+        .section-title { font-size: 15px; font-weight: bold; color: #ff6600; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        .estimation-list { list-style-type: none; padding: 0; margin-top: 10px; }
+        .estimation-list li { margin-bottom: 5px; font-size: 14px; display: flex; justify-content: space-between; }
+        .disclaimer { font-size: 12px; color: #888; margin-top: 20px; text-align: justify; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>محاسبه‌گر شاخص توده بدنی (BMI)</h2>
+    <h2>تحلیل پیشرفته BMI</h2>
+    
+    <div class="input-group">
+        <label for="age">سن:</label>
+        <input type="number" id="age" placeholder="مثلاً: 30" min="1" max="120">
+    </div>
+
+    <div class="input-group">
+        <label for="gender">جنسیت:</label>
+        <select id="gender">
+            <option value="">--- انتخاب کنید ---</option>
+            <option value="1">آقا</option>
+            <option value="0">خانم</option>
+        </select>
+    </div>
     
     <div class="input-group">
         <label for="weight">وزن (کیلوگرم):</label>
@@ -106,60 +57,115 @@
         <input type="number" id="height" placeholder="مثلاً: 170" min="1">
     </div>
     
-    <button onclick="calculateBMI()">✅ محاسبه و تحلیل</button>
+    <button onclick="calculateHealthMetrics()">🔬 تحلیل جامع</button>
     
     <div id="result"></div>
 </div>
 
 <script>
-    function calculateBMI() {
-        // دریافت مقادیر و عناصر
-        const weight = document.getElementById('weight').value;
-        const height = document.getElementById('height').value;
+    // 1. تابع اصلی محاسبه BMI
+    function calculateBMI(weight, height) {
+        const heightInMeters = height / 100;
+        return (weight / (heightInMeters * heightInMeters)).toFixed(1);
+    }
+
+    // 2. تابع تخمین درصد چربی بدن (با استفاده از فرمول Deurenberg - بر اساس BMI، سن و جنسیت)
+    function getBodyFatPercentage(bmi, age, gender) {
+        // Gender: 1=Male, 0=Female
+        // فرمول: BFP = (1.20 * BMI) + (0.23 * Age) - (10.8 * Gender) - 5.4 
+        // در این فرمول، 10.8 برای مردان (1) کم می‌شود و برای زنان (0) کم نمی‌شود.
+        let bfp = (1.20 * parseFloat(bmi)) + (0.23 * age) - (10.8 * gender) - 5.4;
+        return Math.max(0, bfp.toFixed(1)); // مطمئن می‌شویم عدد منفی نشود
+    }
+
+    // 3. تابع تحلیل وضعیت BMI بر اساس سن
+    function analyzeBMIStatus(bmi, age) {
+        let status = { message: "", color: "" };
+
+        if (age < 20) {
+            status.color = "#007bff";
+            status.message = "سن شما زیر 20 سال است. تحلیل BMI بزرگسالان برای شما معتبر نیست. لطفاً با نمودارهای رشد و پزشک متخصص مشورت کنید.";
+            return status;
+        }
+
+        // تنظیمات برای بزرگسالان 20 تا 65 سال
+        if (bmi < 18.5) {
+            status.message = "کمبود وزن";
+            status.color = "#ffc107";
+        } else if (bmi >= 18.5 && bmi < 25) {
+            status.message = "وزن نرمال (سالم)";
+            status.color = "#28a745";
+        } else if (bmi >= 25 && bmi < 30) {
+            status.message = "اضافه وزن";
+            status.color = "#fd7e14";
+        } else {
+            status.message = "چاقی";
+            status.color = "#dc3545";
+        }
+
+        // تنظیمات خاص برای افراد مسن (بالای 65 سال)
+        if (age >= 65 && bmi >= 25 && bmi < 27) {
+            status.message = "وزن خوب (برای سالمندان)";
+            status.color = "#4CAF50"; // کمی سبزتر
+        }
+        
+        return status;
+    }
+
+    // 4. تابع اصلی و جامع
+    function calculateHealthMetrics() {
+        // گرفتن ورودی‌ها
+        const weight = parseFloat(document.getElementById('weight').value);
+        const height = parseFloat(document.getElementById('height').value);
+        const age = parseInt(document.getElementById('age').value);
+        const gender = document.getElementById('gender').value; // 1 یا 0
         const resultDiv = document.getElementById('result');
 
-        // بررسی ورودی خالی
-        if (weight === "" || height === "") {
+        // اعتبارسنجی
+        if (!weight || !height || !age || gender === "") {
             resultDiv.style.backgroundColor = '#ffe0e0';
-            resultDiv.innerHTML = '<p style="color: #dc3545; font-weight: bold;">⚠️ لطفاً هر دو مقدار قد و وزن را وارد کنید.</p>';
+            resultDiv.innerHTML = '<p style="color: #dc3545; font-weight: bold;">⚠️ لطفاً تمام کادرهای سن، جنسیت، وزن و قد را پر کنید.</p>';
             return;
         }
+        
+        // --- محاسبات ---
+        const bmi = calculateBMI(weight, height);
+        const bmiAnalysis = analyzeBMIStatus(bmi, age);
+        const bfp = getBodyFatPercentage(bmi, age, parseInt(gender));
+        
+        // تخمین توده بدون چربی (LBM = Lean Body Mass)
+        const fatMass = (bfp / 100) * weight;
+        const leanBodyMass = weight - fatMass;
+        
+        // --- خروجی ---
+        let outputHTML = `
+            <p class="bmi-value" style="color: ${bmiAnalysis.color};">${bmi}</p>
+            <p class="status-message" style="color: ${bmiAnalysis.color};">وضعیت کلی: ${bmiAnalysis.message}</p>
+        `;
 
-        // تبدیل و محاسبه
-        const heightInMeters = height / 100;
-        let bmi = weight / (heightInMeters * heightInMeters);
-        bmi = bmi.toFixed(1);
-
-        // تحلیل نتیجه و تولید توضیحات کامل
-        let message = "";
-        let color = "";
-        let explanation = "";
-
-        if (bmi < 18.5) {
-            message = "کمبود وزن";
-            color = "#ffc107"; // زرد
-            explanation = "شما در محدوده کمبود وزن قرار دارید. این وضعیت ممکن است نشان‌دهنده تغذیه نامناسب یا نیاز به مشورت با متخصص باشد. وزن پایین می‌تواند ریسک برخی مشکلات سلامتی را افزایش دهد. بهتر است برای رسیدن به وزن سالم اقدام کنید.";
-        } else if (bmi >= 18.5 && bmi < 25) {
-            message = "وزن نرمال (سالم)";
-            color = "#28a745"; // سبز
-            explanation = "تبریک! شما در محدوده وزن سالم و طبیعی قرار دارید. حفظ این محدوده با رژیم غذایی متعادل و فعالیت بدنی منظم، بهترین راه برای داشتن یک زندگی سالم و کاهش خطر بیماری‌هاست.";
-        } else if (bmi >= 25 && bmi < 30) {
-            message = "اضافه وزن";
-            color = "#fd7e14"; // نارنجی
-            explanation = "شما در محدوده اضافه وزن هستید. این وضعیت، احتمال بروز مشکلات سلامتی مانند بیماری‌های قلبی، دیابت نوع ۲ و فشار خون بالا را افزایش می‌دهد. توصیه می‌شود برای کاهش وزن، سبک زندگی خود را بهبود دهید.";
+        // اگر تحلیل BMI درست نبود، فقط هشدار را نمایش بده
+        if (age < 20) {
+            outputHTML += `<p style="font-size:14px; color:#007bff; text-align:justify;">${bmiAnalysis.message}</p>`;
         } else {
-            message = "چاقی (Obease)";
-            color = "#dc3545"; // قرمز
-            explanation = "شما در محدوده چاقی قرار دارید. این وضعیت نیاز به توجه پزشکی جدی دارد. لطفاً جهت جلوگیری از مشکلات سلامتی جدی، سریعاً با پزشک و متخصص تغذیه مشورت کنید و یک برنامه مدیریت وزن را شروع کنید.";
+             // اگر برای بزرگسالان بود، تحلیل چربی و توده را اضافه کن
+            outputHTML += `
+                <p class="section-title">📊 تحلیل ترکیب بدنی (تخمین)</p>
+                <ul class="estimation-list">
+                    <li>درصد چربی بدن (BFP): <span>${bfp}%</span></li>
+                    <li>توده چربی بدن: <span>${fatMass.toFixed(1)} کیلوگرم</span></li>
+                    <li>توده بدون چربی (شامل عضله/استخوان): <span>${leanBodyMass.toFixed(1)} کیلوگرم</span></li>
+                </ul>
+            `;
         }
 
-        // نمایش خروجی نهایی
-        resultDiv.style.backgroundColor = color + "20"; // رنگ پس‌زمینه کمرنگ
-        resultDiv.innerHTML = `
-            <p class="bmi-value" style="color: ${color};">${bmi}</p>
-            <p class="status-message" style="color: ${color};">وضعیت شما: ${message}</p>
-            <p class="explanation-text">${explanation}</p>
+        outputHTML += `
+            <p class="disclaimer">
+            **توضیح فنی:** درصد چربی با فرمول‌های تخمینی (مانند Deurenberg) محاسبه شده و یک "تخمین" علمی است، نه اندازه‌گیری دقیق. برای محاسبه دقیق توده استخوان و ماهیچه، نیاز به اسکن تخصصی است.
+            </p>
         `;
+
+        resultDiv.style.backgroundColor = bmiAnalysis.color + "20";
+        resultDiv.innerHTML = outputHTML;
     }
 </script>
 
