@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاسبه شاخص توده بدنی (BMI)</title>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+            border-top: 5px solid #ff6600; /* رنگ نارنجی ایتا */
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #e65c00; }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>محاسبه‌گر BMI</h2>
+    <input type="number" id="weight" placeholder="وزن خود را وارد کنید (کیلوگرم)">
+    <input type="number" id="height" placeholder="قد خود را وارد کنید (سانتی‌متر)">
+    <button onclick="calculateBMI()">محاسبه کن</button>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    function calculateBMI() {
+        // دریافت مقادیر
+        let weight = document.getElementById('weight').value;
+        let height = document.getElementById('height').value;
+        let resultDiv = document.getElementById('result');
+
+        // بررسی خالی نبودن
+        if (weight === "" || height === "") {
+            resultDiv.style.color = "red";
+            resultDiv.innerHTML = "لطفاً وزن و قد را وارد کنید.";
+            return;
+        }
+
+        // تبدیل قد از سانتی‌متر به متر
+        let heightInMeters = height / 100;
+
+        // فرمول BMI
+        let bmi = weight / (heightInMeters * heightInMeters);
+        bmi = bmi.toFixed(1); // گرد کردن تا یک رقم اعشار
+
+        // تحلیل نتیجه
+        let message = "";
+        let color = "";
+
+        if (bmi < 18.5) {
+            message = "کمبود وزن";
+            color = "#ffc107"; // زرد
+        } else if (bmi >= 18.5 && bmi < 25) {
+            message = "وزن نرمال (سالم)";
+            color = "#28a745"; // سبز
+        } else if (bmi >= 25 && bmi < 30) {
+            message = "اضافه وزن";
+            color = "#fd7e14"; // نارنجی
+        } else {
+            message = "چاقی";
+            color = "#dc3545"; // قرمز
+        }
+
+        // نمایش خروجی
+        resultDiv.style.backgroundColor = color + "20"; // رنگ پس‌زمینه کمرنگ
+        resultDiv.style.color = color;
+        resultDiv.innerHTML = `عدد BMI شما: ${bmi}<br>${message}`;
+    }
+</script>
+
+</body>
+</html>
