@@ -3,42 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحلیل جامع و زیبایی‌شناختی BMI</title>
+    <title>تحلیل پیشرفته BMI (فوق گرافیکی)</title>
     <style>
-        /* تنظیمات اصلی و فونت */
+        /* --- تنظیمات پایه --- */
         body { 
             font-family: Tahoma, sans-serif; 
-            background-color: #f0f2f5; 
-            padding: 15px; 
+            background-color: #f0f0f3; /* رنگ زمینه نرم و خنثی */
+            padding: 20px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             min-height: 100vh;
             margin: 0;
+            color: #333;
         }
 
-        /* کانتینر اصلی (کارت شیشه‌ای/مدرن) */
+        /* --- استایل Neumorphism برای کانتینر --- */
         .container { 
-            background-color: white; 
+            background-color: #f0f0f3; 
             padding: 30px; 
-            border-radius: 25px; /* گوشه‌های گردتر */
-            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.9);
+            border-radius: 20px; 
+            /* سایه Neumorphism عمیق: نور بالا و سایه پایین */
+            box-shadow: 
+                6px 6px 12px #bebebe, 
+                -6px -6px 12px #ffffff; 
             width: 100%; 
             max-width: 380px; 
             text-align: center; 
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            transition: all 0.4s ease;
         }
 
         h2 { 
-            color: #1a237e; /* آبی تیره شیک */
+            color: #1e88e5; /* آبی جذاب */
             margin-bottom: 30px; 
             padding-bottom: 10px;
             font-size: 22px;
-            font-weight: 800;
-            border-bottom: 3px solid #ffab40; /* خط طلایی */
+            font-weight: 900;
+            border-bottom: 3px solid #ffab40; 
+            letter-spacing: 0.5px;
         }
 
-        /* گروه ورودی‌ها */
+        /* --- ورودی‌ها --- */
         .input-group { 
             text-align: right; 
             margin-bottom: 18px; 
@@ -48,27 +54,28 @@
         label { 
             display: block; 
             font-size: 13px; 
-            color: #444; 
+            color: #555; 
             margin-bottom: 5px; 
             font-weight: 600;
         }
 
-        /* استایل ورودی‌ها */
+        /* استایل ورودی‌ها با فرو رفتگی نئومورفیک */
         input, select {
             width: 100%; 
             padding: 14px 15px 14px 40px; 
             border: none;
-            border-radius: 12px; 
+            border-radius: 10px; 
             box-sizing: border-box; 
             font-size: 16px; 
-            background-color: #e8eaf6; /* آبی ملایم */
-            box-shadow: inset 3px 3px 7px rgba(0, 0, 0, 0.1); 
-            transition: all 0.3s;
+            background-color: #f0f0f3; 
+            /* سایه داخلی برای ایجاد حس فرو رفتگی */
+            box-shadow: inset 3px 3px 5px #bebebe, inset -3px -3px 5px #ffffff; 
+            transition: all 0.3s ease;
         }
         input:focus, select:focus {
             background-color: white;
-            box-shadow: 0 0 0 2px #ffab40, inset 1px 1px 3px rgba(0, 0, 0, 0.15);
-            outline: none;
+            box-shadow: inset 1px 1px 2px #bebebe, inset -1px -1px 2px #ffffff;
+            outline: 1px solid #1e88e5; /* خط آبی در فوکوس */
         }
         
         /* آیکون‌های ورودی */
@@ -77,62 +84,80 @@
             left: 10px;
             top: 40px;
             font-size: 18px;
-            color: #ffab40; /* طلایی */
+            color: #ffab40;
         }
 
-        /* دکمه زیبا و جذاب */
+        /* --- دکمه فوق‌العاده زیبا --- */
         button {
             width: 100%; 
             padding: 16px; 
-            background-color: #ffab40; 
-            color: #1a237e; /* متن آبی تیره روی دکمه طلایی */
+            background-color: #ffab40; /* رنگ اصلی دکمه */
+            color: white;
             border: none; 
             border-radius: 12px; 
             font-size: 18px; 
             cursor: pointer; 
-            margin-top: 25px;
-            box-shadow: 6px 6px 15px rgba(255, 171, 64, 0.5); 
-            transition: all 0.3s;
+            margin-top: 30px;
+            /* سایه برجسته نئومورفیک */
+            box-shadow: 4px 4px 8px #bebebe, -4px -4px 8px #ffffff; 
+            transition: all 0.2s ease;
             font-weight: bold;
         }
+        /* جلوه ویژه هنگام کلیک */
         button:active { 
             background-color: #ffa000; 
-            transform: translateY(3px);
-            box-shadow: 2px 2px 5px rgba(255, 171, 64, 0.8);
+            transform: translateY(2px);
+            box-shadow: 2px 2px 4px #bebebe, -2px -2px 4px #ffffff; /* فرو رفتگی هنگام کلیک */
         }
 
-        /* بخش نمایش نتایج */
+        /* --- بخش نمایش نتایج --- */
         #result { 
             margin-top: 35px; 
             text-align: right; 
-            padding: 20px; 
-            border-radius: 20px; 
             line-height: 1.7;
-            background-color: #ffffff;
-            border: 2px solid; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
+
+        /* استایل کارت‌ها (جدید) */
+        .result-card {
+            background-color: #f0f0f3;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 
+                4px 4px 8px #bebebe, 
+                -4px -4px 8px #ffffff; 
+            border: 2px solid; /* رنگ Border در JS تعیین می‌شود */
+            transition: all 0.4s ease;
+        }
+
+        /* وضعیت و عدد BMI */
         .bmi-value { 
-            font-size: 36px; 
-            margin-bottom: 5px; 
+            font-size: 40px; 
             font-weight: 900;
             text-align: center;
+            margin-bottom: 5px;
         }
         .status-message { 
             font-size: 18px; 
             font-weight: bold; 
-            margin-bottom: 15px; 
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px dashed #ccc;
             text-align: center;
         }
+        
+        /* تایتل‌های داخلی کارت */
         .section-title { 
-            font-size: 15px; 
+            font-size: 14px; 
             font-weight: bold; 
-            color: #1a237e; 
-            margin-top: 20px; 
-            padding-bottom: 5px;
+            color: #1e88e5; 
+            margin-top: 15px; 
+            padding: 5px 0;
+            text-align: center;
+            border-bottom: 1px dotted #ccc;
         }
+        
+        /* لیست تخمین‌ها */
         .estimation-list { 
             list-style-type: none; 
             padding: 0; 
@@ -143,28 +168,23 @@
             font-size: 14px; 
             display: flex; 
             justify-content: space-between; 
-            background-color: #f7f7f7;
+            background-color: #e8eaf6; /* بک‌گراند آبی روشن */
             padding: 8px 12px;
             border-radius: 8px;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
         }
+
+        /* متن توضیحات جامع */
         .explanation-text {
             font-size: 13px;
             text-align: justify;
             color: #444;
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px dashed #e0e0e0;
-        }
-        .disclaimer { 
-            font-size: 11px; 
-            color: #888; 
-            margin-top: 20px; 
-            text-align: justify; 
-            padding-top: 10px; 
-            border-top: 1px dashed #ccc; 
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #ffab40; /* خط جذاب */
         }
 
-        /* امضای پایین صفحه */
+        /* امضا */
         .signature {
             font-size: 12px;
             color: #777;
@@ -172,20 +192,22 @@
             width: 100%;
             max-width: 380px;
             text-align: center;
-            padding-bottom: 5px;
             font-weight: 600;
         }
         .signature a {
-            color: #1a237e;
+            color: #1e88e5;
             text-decoration: none;
             font-weight: bold;
+        }
+        .disclaimer { /* استایل هشدار */
+            font-size: 11px; color: #888; margin-top: 20px; text-align: justify; padding-top: 10px; border-top: 1px dashed #ccc; 
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>✨ تحلیل جامع وضعیت بدنی</h2>
+    <h2>✨ تحلیل جامع و زیبایی‌شناختی BMI</h2>
     
     <div class="input-group">
         <label for="age">سن:</label>
@@ -234,168 +256,108 @@
 
     // 2. تابع تخمین درصد چربی بدن (فرمول Deurenberg)
     function getBodyFatPercentage(bmi, age, gender) {
-        // Gender: 1=Male (آقا), 0=Female (خانم)
-        // BFP = (1.20 * BMI) + (0.23 * Age) - (10.8 * Gender) - 5.4 
         let bfp = (1.20 * parseFloat(bmi)) + (0.23 * age) - (10.8 * gender) - 5.4;
         return Math.max(0, bfp.toFixed(1));
     }
 
-    // 3. توضیحات اختصاصی برای هر وضعیت
+    // 3. تولید توضیحات اختصاصی برای هر وضعیت
     function generateExplanation(status, age, gender, bmi) {
         const isMale = gender === 1;
         const idealRange = age >= 20 ? "۱۸.۵ تا ۲۵" : "وابسته به نمودار رشد";
-
         let explanation = "";
 
         if (age < 2) {
-            return "این برنامک برای تحلیل کودکان زیر ۲ سال طراحی نشده است. برای این سن، فقط پزشک متخصص می‌تواند وضعیت کودک را با نمودارهای تخصصی بررسی کند.";
+            return "این برنامک برای تحلیل کودکان زیر ۲ سال طراحی نشده است. برای این سن، تنها پزشک متخصص می‌تواند وضعیت کودک را با نمودارهای تخصصی بررسی کند.";
         }
 
-        // --- بزرگسالان و نوجوانان (توضیحات مفصل) ---
+        const isChild = age < 20;
 
+        // --- توضیحات مفصل ---
         if (status.message.includes("کمبود وزن") || status.message.includes("زیر 5 درصد")) {
-            explanation = `شما در محدوده کمبود وزن قرار دارید. BMI پایین (زیر ${idealRange}) می‌تواند نشان‌دهنده سوءتغذیه یا عدم دریافت کافی کالری باشد. این وضعیت ریسک کمبود ویتامین‌ها، پوکی استخوان و ضعف سیستم ایمنی را افزایش می‌دهد. توصیه می‌شود حتماً برای افزایش وزن سالم و بررسی وضعیت داخلی بدن، با یک متخصص تغذیه یا پزشک مشورت کنید. هدف شما رسیدن به محدوده BMI ایده‌آل (بیش از ${idealRange.split(" تا ")[0]}) است.`;
+            explanation = `${isChild ? 'وضعیت BMI شما نیاز به پیگیری دقیق دارد.' : 'شما در محدوده کمبود وزن قرار دارید.'} BMI پایین (زیر ${idealRange}) می‌تواند نشان‌دهنده سوءتغذیه، جذب ناکافی مواد مغذی یا نیاز به افزایش توده عضلانی باشد. این وضعیت، به‌ویژه در سنین رشد، می‌تواند ریسک‌های سلامتی را افزایش دهد. **اقدام پیشنهادی:** مشورت با متخصص تغذیه برای یک برنامه غذایی پرکالری و مغذی جهت رسیدن به محدوده سالم.`;
         
         } else if (status.message.includes("وزن نرمال") || status.message.includes("سالم")) {
-            explanation = `تبریک! شما در محدوده وزن کاملاً سالم قرار دارید. BMI شما در ایده‌آل‌ترین وضعیت (${idealRange}) است که کمترین ریسک ابتلا به بیماری‌های مرتبط با وزن را به همراه دارد. کلید حفظ این وضعیت، ادامه سبک زندگی متعادل، تغذیه مناسب و فعالیت بدنی منظم است. تلاش کنید این محدوده سالم را حفظ کنید.`;
+            explanation = `تبریک! شما در **محدوده وزن ایده‌آل و سالم** قرار دارید. BMI شما کمترین ریسک ابتلا به بیماری‌های مرتبط با وزن را نشان می‌دهد. حفظ این وضعیت با ادامه رژیم غذایی متعادل و ورزش، تضمین‌کننده سلامت طولانی‌مدت شماست. **اقدام پیشنهادی:** حفظ وضعیت فعلی و توجه به نسبت چربی به عضله.`;
 
         } else if (status.message.includes("اضافه وزن") || status.message.includes("85 تا 95 درصد")) {
-            explanation = `شما در محدوده اضافه وزن قرار دارید. در حالی که این وضعیت هنوز چاقی محسوب نمی‌شود، اما زنگ هشداری جدی است. اضافه وزن ریسک ابتلا به دیابت نوع ۲، فشار خون و بیماری‌های قلبی را افزایش می‌دهد. با تمرکز بر کاهش تدریجی وزن (۵ تا ۱۰ درصد وزن فعلی) از طریق کنترل کالری و افزایش تمرینات هوازی، می‌توانید به سادگی به محدوده سالم بازگردید.`;
+            explanation = `${isChild ? 'شما در معرض خطر اضافه وزن هستید.' : 'شما در محدوده اضافه وزن قرار دارید.'} این وضعیت یک زنگ خطر جدی محسوب می‌شود و ریسک بیماری‌های قلبی-عروقی و دیابت نوع ۲ را افزایش می‌دهد. **اقدام پیشنهادی:** تمرکز بر کاهش ۵ تا ۱۰ درصدی وزن بدن از طریق کنترل سهم غذایی، کاهش مصرف قند و چربی‌های ناسالم و افزایش فعالیت‌های روزانه.`;
 
         } else if (status.message.includes("چاقی") || status.message.includes("بالای 95 درصد")) {
-            explanation = `شما در محدوده چاقی قرار دارید. این وضعیت نیاز به توجه پزشکی فوری و جدی دارد. چاقی با ریسک بالای بیماری‌های مزمن مانند بیماری قلبی، سکته مغزی و برخی سرطان‌ها همراه است. تنها راه مدیریت این وضعیت، شروع یک برنامه جامع مدیریت وزن تحت نظر پزشک و متخصص تغذیه است. این برنامه باید شامل تغییرات پایدار در رژیم غذایی و فعالیت بدنی باشد.`;
+            explanation = `${isChild ? 'شما در محدوده چاقی قرار دارید.' : 'وضعیت شما نیاز به توجه فوری پزشکی دارد.'} چاقی با ریسک بسیار بالای بیماری‌های مزمن و مشکلات حرکتی همراه است. **اقدام پیشنهادی:** ضروری است که بدون تأخیر با پزشک، متخصص غدد و متخصص تغذیه مشورت کنید تا یک برنامه جامع و درمانی برای مدیریت و کاهش وزن طراحی شود.`;
 
         }
         return explanation;
     }
 
-    // 4. تحلیل BMI برای بزرگسالان (بالای 20 سال)
+    // 5. تحلیل BMI برای بزرگسالان و نوجوانان (بدون تغییر در منطق)
     function analyzeAdultBMIStatus(bmi, age) {
         let status = { message: "", color: "", source: "" };
-
-        if (bmi < 18.5) {
-            status.message = "کمبود وزن";
-            status.color = "#ffc107"; // Yellow
-        } else if (bmi >= 18.5 && bmi < 25) {
-            status.message = "وزن نرمال و سالم";
-            status.color = "#28a745"; // Green
-        } else if (bmi >= 25 && bmi < 30) {
-            status.message = "اضافه وزن";
-            status.color = "#fd7e14"; // Orange
-        } else {
-            status.message = "چاقی (نیاز به توجه پزشکی)";
-            status.color = "#dc3545"; // Red
-        }
-
-        // ملاحظات برای سالمندان
-        if (age >= 65 && bmi >= 25 && bmi < 27) {
-            status.message = "وزن مناسب (برای سالمندان)";
-            status.color = "#388E3C";
-        }
-        
+        if (bmi < 18.5) { status.message = "کمبود وزن"; status.color = "#ffc107"; } else if (bmi >= 18.5 && bmi < 25) { status.message = "وزن نرمال و سالم"; status.color = "#28a745"; } else if (bmi >= 25 && bmi < 30) { status.message = "اضافه وزن"; status.color = "#fd7e14"; } else { status.message = "چاقی (نیاز به توجه پزشکی)"; status.color = "#dc3545"; }
+        if (age >= 65 && bmi >= 25 && bmi < 27) { status.message = "وزن مناسب (برای سالمندان)"; status.color = "#388E3C"; }
         status.source = "سازمان بهداشت جهانی (WHO)";
         return status;
     }
-
-    // 5. تحلیل BMI برای کودکان و نوجوانان (زیر 20 سال)
     function analyzeChildBMIStatus(bmi, age) {
         let status = { message: "", color: "", source: "" };
-
-        if (age < 2) {
-            status.message = "هشدار: زیر ۲ سال";
-            status.color = "#007bff";
-            status.source = "نمودارهای تخصصی";
-            return status;
-        }
-
-        // منطق Percentile (تقریبی)
-        if (bmi < 16) { 
-             status.message = "کمبود وزن (زیر 5 درصد)";
-             status.color = "#ffc107";
-        } else if (bmi >= 16 && bmi < 22) { 
-             status.message = "وزن سالم (بین 5 تا 85 درصد)";
-             status.color = "#28a745";
-        } else if (bmi >= 22 && bmi < 25) { 
-             status.message = "اضافه وزن (بین 85 تا 95 درصد)";
-             status.color = "#fd7e14";
-        } else { 
-             status.message = "چاقی (بالای 95 درصد)";
-             status.color = "#dc3545";
-        }
-
+        if (age < 2) { status.message = "هشدار: زیر ۲ سال"; status.color = "#007bff"; status.source = "نمودارهای تخصصی"; return status; }
+        if (bmi < 16) { status.message = "کمبود وزن (زیر 5 درصد)"; status.color = "#ffc107"; } else if (bmi >= 16 && bmi < 22) { status.message = "وزن سالم (بین 5 تا 85 درصد)"; status.color = "#28a745"; } else if (bmi >= 22 && bmi < 25) { status.message = "اضافه وزن (بین 85 تا 95 درصد)"; status.color = "#fd7e14"; } else { status.message = "چاقی (بالای 95 درصد)"; status.color = "#dc3545"; }
         status.source = "نمودارهای رشد CDC/WHO (تقریب)";
         return status;
     }
 
     // 6. تابع اصلی و جامع
     function calculateHealthMetrics() {
-        // گرفتن ورودی‌ها
         const weight = parseFloat(document.getElementById('weight').value);
         const height = parseFloat(document.getElementById('height').value);
         const age = parseInt(document.getElementById('age').value);
         const gender = document.getElementById('gender').value; 
         const resultDiv = document.getElementById('result');
 
-        // اعتبارسنجی
         if (!weight || !height || !age || gender === "") {
-            resultDiv.style.backgroundColor = '#ffe0e0';
-            resultDiv.style.borderColor = '#dc3545';
-            resultDiv.innerHTML = '<p style="color: #dc3545; font-weight: bold; text-align: center;">⚠️ لطفاً تمام کادرها را پر کنید.</p>';
+            resultDiv.innerHTML = '<div class="result-card" style="border-color:#dc3545;"><p style="color: #dc3545; font-weight: bold; text-align: center;">⚠️ لطفاً تمام کادرها را پر کنید.</p></div>';
             return;
         }
         
-        // محاسبات
         const bmi = calculateBMI(weight, height);
         const genderInt = parseInt(gender);
 
         let analysis;
-        if (age >= 20) {
-            analysis = analyzeAdultBMIStatus(bmi, age);
-        } else {
-            analysis = analyzeChildBMIStatus(bmi, age);
-        }
+        if (age >= 20) { analysis = analyzeAdultBMIStatus(bmi, age); } else { analysis = analyzeChildBMIStatus(bmi, age); }
 
         const bfp = getBodyFatPercentage(bmi, age, genderInt);
-        
-        // تخمین توده بدون چربی (LBM)
         const fatMass = (bfp / 100) * weight;
         const leanBodyMass = weight - fatMass;
 
-        // تولید توضیحات کامل و اختصاصی
         const explanationText = generateExplanation(analysis, age, genderInt, bmi);
         
-        // خروجی HTML
+        // --- خروجی HTML با ساختار کارت ---
         let outputHTML = `
-            <p class="bmi-value" style="color: ${analysis.color};">${bmi}</p>
-            <p class="status-message" style="color: ${analysis.color};">وضعیت شما: ${analysis.message}</p>
-            <p class="section-title">🌟 محدوده BMI ایده‌آل</p>
-            <ul class="estimation-list">
-                <li>اگر بالای ۲۰ سال هستید: <span>۱۸.۵ تا ۲۵</span></li>
-                <li>تخمین مرجع تحلیل: <span>${analysis.source}</span></li>
-            </ul>
-        `;
-
-        // نمایش تخمین ترکیب بدنی (اگر سن زیر 2 سال نیست)
-        if (age >= 2) {
-            outputHTML += `
-                <p class="section-title">📊 ترکیب بدنی (تخمین)</p>
+            <div class="result-card" style="border-color: ${analysis.color};">
+                <p class="bmi-value" style="color: ${analysis.color};">${bmi}</p>
+                <p class="status-message" style="color: ${analysis.color};">وضعیت نهایی: ${analysis.message}</p>
+                
+                <p class="section-title">🌟 محدوده BMI ایده‌آل و مرجع</p>
                 <ul class="estimation-list">
-                    <li>توده چربی بدن: <span>${fatMass.toFixed(1)} کیلوگرم (${bfp}%)</span></li>
-                    <li>توده بدون چربی (شامل عضله، آب و استخوان): <span>${leanBodyMass.toFixed(1)} کیلوگرم</span></li>
+                    <li>اگر بالای ۲۰ سال هستید: <span>۱۸.۵ تا ۲۵</span></li>
+                    <li>تخمین مرجع تحلیل: <span>${analysis.source}</span></li>
                 </ul>
-            `;
-        }
+            </div>
+            
+            <div class="result-card">
+                ${age >= 2 ? `
+                    <p class="section-title">📊 تحلیل ترکیب بدنی (تخمین)</p>
+                    <ul class="estimation-list">
+                        <li>توده چربی بدن: <span>${fatMass.toFixed(1)} کیلوگرم (${bfp}%)</span></li>
+                        <li>توده بدون چربی (شامل عضله، آب و استخوان): <span>${leanBodyMass.toFixed(1)} کیلوگرم</span></li>
+                    </ul>` : ''}
 
-        outputHTML += `
-            <p class="explanation-text">${explanationText}</p>
-            <p class="disclaimer">
-            **هشدار:** این یک تخمین علمی است. برای تشخیص دقیق سلامتی و دریافت برنامه غذایی، با متخصص مشورت کنید.
-            </p>
+                <p class="explanation-text">${explanationText}</p>
+                <p class="disclaimer">
+                **هشدار:** این یک تخمین علمی است. برای تشخیص دقیق سلامتی و دریافت برنامه غذایی، با متخصص مشورت کنید.
+                </p>
+            </div>
         `;
 
-        // استایل کارت نتیجه نهایی
-        resultDiv.style.backgroundColor = analysis.color + "15";
-        resultDiv.style.borderColor = analysis.color;
         resultDiv.innerHTML = outputHTML;
     }
 </script>
