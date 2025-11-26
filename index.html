@@ -3,112 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاسبه شاخص توده بدنی (BMI)</title>
+    <title>محاسبه‌گر BMI هوشمند</title>
     <style>
+        /* تنظیمات کلی صفحه */
         body {
             font-family: Tahoma, sans-serif;
             background-color: #f0f2f5;
+            padding: 10px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
         }
+        /* کانتینر اصلی */
         .container {
             background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 300px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px; /* اندازه مناسب برای گوشی */
             text-align: center;
-            border-top: 5px solid #ff6600; /* رنگ نارنجی ایتا */
         }
-        h2 { color: #333; margin-bottom: 20px; }
+        h2 { 
+            color: #333; 
+            margin-bottom: 25px;
+            border-bottom: 2px solid #ff6600; /* خط نارنجی زیر عنوان */
+            padding-bottom: 10px;
+        }
+        /* ظاهر ورودی‌ها */
+        .input-group {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
         input {
             width: 100%;
             padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 16px;
             text-align: center;
         }
+        /* ظاهر دکمه */
         button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: #ff6600;
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 17px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
+            transition: background-color 0.3s;
         }
-        button:hover { background-color: #e65c00; }
+        button:active { background-color: #e65c00; }
+
+        /* بخش نمایش نتایج */
         #result {
-            margin-top: 20px;
+            margin-top: 30px;
+            text-align: right; /* متن توضیحات راست چین باشد */
+            padding: 15px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+        .bmi-value {
+            font-size: 36px;
+            margin-bottom: 5px;
             font-weight: bold;
+        }
+        .status-message {
             font-size: 18px;
-            padding: 10px;
-            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .explanation-text {
+            font-size: 14px;
+            text-align: justify;
+            color: #444;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>محاسبه‌گر BMI</h2>
-    <input type="number" id="weight" placeholder="وزن خود را وارد کنید (کیلوگرم)">
-    <input type="number" id="height" placeholder="قد خود را وارد کنید (سانتی‌متر)">
-    <button onclick="calculateBMI()">محاسبه کن</button>
+    <h2>محاسبه‌گر شاخص توده بدنی (BMI)</h2>
+    
+    <div class="input-group">
+        <label for="weight">وزن (کیلوگرم):</label>
+        <input type="number" id="weight" placeholder="مثلاً: 75" min="1">
+    </div>
+    
+    <div class="input-group">
+        <label for="height">قد (سانتی‌متر):</label>
+        <input type="number" id="height" placeholder="مثلاً: 170" min="1">
+    </div>
+    
+    <button onclick="calculateBMI()">✅ محاسبه و تحلیل</button>
     
     <div id="result"></div>
 </div>
 
 <script>
     function calculateBMI() {
-        // دریافت مقادیر
-        let weight = document.getElementById('weight').value;
-        let height = document.getElementById('height').value;
-        let resultDiv = document.getElementById('result');
+        // دریافت مقادیر و عناصر
+        const weight = document.getElementById('weight').value;
+        const height = document.getElementById('height').value;
+        const resultDiv = document.getElementById('result');
 
-        // بررسی خالی نبودن
+        // بررسی ورودی خالی
         if (weight === "" || height === "") {
-            resultDiv.style.color = "red";
-            resultDiv.innerHTML = "لطفاً وزن و قد را وارد کنید.";
+            resultDiv.style.backgroundColor = '#ffe0e0';
+            resultDiv.innerHTML = '<p style="color: #dc3545; font-weight: bold;">⚠️ لطفاً هر دو مقدار قد و وزن را وارد کنید.</p>';
             return;
         }
 
-        // تبدیل قد از سانتی‌متر به متر
-        let heightInMeters = height / 100;
-
-        // فرمول BMI
+        // تبدیل و محاسبه
+        const heightInMeters = height / 100;
         let bmi = weight / (heightInMeters * heightInMeters);
-        bmi = bmi.toFixed(1); // گرد کردن تا یک رقم اعشار
+        bmi = bmi.toFixed(1);
 
-        // تحلیل نتیجه
+        // تحلیل نتیجه و تولید توضیحات کامل
         let message = "";
         let color = "";
+        let explanation = "";
 
         if (bmi < 18.5) {
             message = "کمبود وزن";
             color = "#ffc107"; // زرد
+            explanation = "شما در محدوده کمبود وزن قرار دارید. این وضعیت ممکن است نشان‌دهنده تغذیه نامناسب یا نیاز به مشورت با متخصص باشد. وزن پایین می‌تواند ریسک برخی مشکلات سلامتی را افزایش دهد. بهتر است برای رسیدن به وزن سالم اقدام کنید.";
         } else if (bmi >= 18.5 && bmi < 25) {
             message = "وزن نرمال (سالم)";
             color = "#28a745"; // سبز
+            explanation = "تبریک! شما در محدوده وزن سالم و طبیعی قرار دارید. حفظ این محدوده با رژیم غذایی متعادل و فعالیت بدنی منظم، بهترین راه برای داشتن یک زندگی سالم و کاهش خطر بیماری‌هاست.";
         } else if (bmi >= 25 && bmi < 30) {
             message = "اضافه وزن";
             color = "#fd7e14"; // نارنجی
+            explanation = "شما در محدوده اضافه وزن هستید. این وضعیت، احتمال بروز مشکلات سلامتی مانند بیماری‌های قلبی، دیابت نوع ۲ و فشار خون بالا را افزایش می‌دهد. توصیه می‌شود برای کاهش وزن، سبک زندگی خود را بهبود دهید.";
         } else {
-            message = "چاقی";
+            message = "چاقی (Obease)";
             color = "#dc3545"; // قرمز
+            explanation = "شما در محدوده چاقی قرار دارید. این وضعیت نیاز به توجه پزشکی جدی دارد. لطفاً جهت جلوگیری از مشکلات سلامتی جدی، سریعاً با پزشک و متخصص تغذیه مشورت کنید و یک برنامه مدیریت وزن را شروع کنید.";
         }
 
-        // نمایش خروجی
+        // نمایش خروجی نهایی
         resultDiv.style.backgroundColor = color + "20"; // رنگ پس‌زمینه کمرنگ
-        resultDiv.style.color = color;
-        resultDiv.innerHTML = `عدد BMI شما: ${bmi}<br>${message}`;
+        resultDiv.innerHTML = `
+            <p class="bmi-value" style="color: ${color};">${bmi}</p>
+            <p class="status-message" style="color: ${color};">وضعیت شما: ${message}</p>
+            <p class="explanation-text">${explanation}</p>
+        `;
     }
 </script>
 
